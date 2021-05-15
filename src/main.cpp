@@ -3,47 +3,59 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <avr/power.h>
+#include <avr/wdt.h>
 
 #define bit_set(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define bit_clear(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 
-void all_pin_pullup();
 void pico_power();
-void setup_timer2();
+void timer2_enable(bool);
 void loop();
 
 int main() {
-  all_pin_pullup();
   pico_power();
-  setup_timer2();
+  timer2_enable(true);
 
   bit_set(DDRB, PB0);
+
+  // timer2_enable(false);
 
   loop();
 
   return 0;
 }
 
-void all_pin_pullup() {
-  DDRB = DDRC = DDRD = 0x00;
-  PORTB = PORTC = PORTD = 0xFF;
-}
-
 void pico_power() {
   power_all_disable();
-  power_timer2_enable();
   power_spi_enable();
 }
 
-void setup_timer2() {
-  bit_set(ASSR, AS2);
+void timer2_enable(bool enable) {
+  char oldSREG = SREG;
+  cli();
 
-  TCCR2B |= 5; // clk / 128
+  bit_clear(TIMSK2, TOIE2);
 
-  while (bit_is_set(ASSR, TCN2UB) || bit_is_set(ASSR, TCR2BUB))
-    ;
+  if (enable) {
+    power_timer2_enable();
+    bit_set(ASSR, AS2);
+    TCCR2B |= 5; // clk / 128
+
+    while (bit_is_set(ASSR, TCN2UB))
+      ;
+    bit_set(TIMSK2, TOIE2);
+  } else {
+    bit_clear(ASSR, AS2);
+    TCNT2 = 0;
+
+    while (bit_is_set(ASSR, TCR2BUB))
+      ;
+    bit_clear(TIMSK2, TOIE2);
+    power_timer2_disable();
+  }
   bit_set(TIFR2, TOV2);
-  bit_set(TIMSK2, TOIE2);
+
+  SREG = oldSREG;
 }
 
 void loop() {
