@@ -1,7 +1,4 @@
-#include <RemoteSignal.h>
-
-#define bit_set(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-#define bit_clear(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#include <RemoteSignal.hxx>
 
 void pico_power();
 void timer2_enable(bool);
