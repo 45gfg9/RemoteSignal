@@ -1,9 +1,4 @@
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/sleep.h>
-#include <avr/interrupt.h>
-#include <avr/power.h>
-#include <avr/wdt.h>
+#include <RemoteSignal.h>
 
 #define bit_set(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define bit_clear(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
