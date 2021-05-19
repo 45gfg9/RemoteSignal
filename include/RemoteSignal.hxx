@@ -26,8 +26,11 @@ namespace wdt {
     wdto_4096ms = _BV(WDP3),
     wdto_8192ms = _BV(WDP3) | _BV(WDP0),
   };
-  void enable(wdto_t);
+
+  void interrupt(wdto_t);
   void disable();
+
+  void feed();
 } // namespace wdt
 
 namespace timer2 {
