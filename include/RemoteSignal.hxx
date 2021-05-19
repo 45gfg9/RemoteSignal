@@ -10,38 +10,66 @@
 #define set_bit(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define clear_bit(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 
-enum wdto_t {
-  wdto_16ms = 0,
-  wdto_32ms = _BV(WDP0),
-  wdto_64ms = _BV(WDP1),
-  wdto_128ms = _BV(WDP1) | _BV(WDP0),
-  wdto_256ms = _BV(WDP2),
-  wdto_512ms = _BV(WDP2) | _BV(WDP0),
-  wdto_1024ms = _BV(WDP2) | _BV(WDP1),
-  wdto_2048ms = _BV(WDP2) | _BV(WDP1) | _BV(WDP0),
-  wdto_4096ms = _BV(WDP3),
-  wdto_8192ms = _BV(WDP3) | _BV(WDP0),
-};
-
-static volatile uint8_t &LED_DDRR = DDRD;
-static volatile uint8_t &LED_PORTR = PORTD;
-static volatile uint8_t &LED_PINR = PIND;
-static const uint8_t LED_PIN = PD0;
-
 void init_io();
-void init_spi();
-void init_rf24();
-void init_timer2();
+void loop();
 
-void wdt_enable(wdto_t);
+namespace wdt {
+  enum wdto_t {
+    wdto_16ms = 0,
+    wdto_32ms = _BV(WDP0),
+    wdto_64ms = _BV(WDP1),
+    wdto_128ms = _BV(WDP1) | _BV(WDP0),
+    wdto_256ms = _BV(WDP2),
+    wdto_512ms = _BV(WDP2) | _BV(WDP0),
+    wdto_1024ms = _BV(WDP2) | _BV(WDP1),
+    wdto_2048ms = _BV(WDP2) | _BV(WDP1) | _BV(WDP0),
+    wdto_4096ms = _BV(WDP3),
+    wdto_8192ms = _BV(WDP3) | _BV(WDP0),
+  };
+  void enable(wdto_t);
+  void disable();
+} // namespace wdt
 
-void timer2_acquire();
-void timer2_release();
+namespace timer2 {
+  enum t2_speed_t {
+    stopped = 0,
+    clk_div_1 = _BV(CS20),
+    clk_div_8 = _BV(CS21),
+    clk_div_32 = _BV(CS21) | _BV(CS20),
+    clk_div_64 = _BV(CS22),
+    clk_div_128 = _BV(CS22) | _BV(CS20),
+    clk_div_256 = _BV(CS22) | _BV(CS21),
+    clk_div_1024 = _BV(CS22) | _BV(CS21) | _BV(CS20),
+  };
 
-void led_on();
-void led_off();
+  void begin(t2_speed_t = clk_div_1);
+  void stop();
 
-void rf24_rx();
-void rf24_tx(uint8_t);
+  void acquire();
+  void release();
+} // namespace timer2
+
+namespace led {
+  void on();
+  void off();
+} // namespace led
+
+namespace spi {
+  void begin();
+  void end();
+
+  void rx();
+  void tx();
+} // namespace spi
+
+namespace rf24 {
+  enum rf24_mode_t { RX, TX };
+
+  bool ready();
+
+  void mode(rf24_mode_t);
+  void rx();
+  void tx(uint8_t);
+} // namespace rf24
 
 #endif

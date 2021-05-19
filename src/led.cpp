@@ -1,9 +1,9 @@
 #include <RemoteSignal.hxx>
 
-void led_on() {
-  set_bit(LED_DDRR, LED_PIN);
+void led::on() {
+  set_bit(PORTD, PORT0);
 }
 
-void led_off() {
-  clear_bit(LED_DDRR, LED_PIN);
+void led::off() {
+  clear_bit(PORTD, PORT0);
 }
