@@ -45,7 +45,9 @@ namespace timer2 {
     clk_div_1024 = _BV(CS22) | _BV(CS21) | _BV(CS20),
   };
 
-  void begin(t2_speed_t = clk_div_1);
+  void init();
+
+  void begin(t2_speed_t = clk_div_128);
   void stop();
 
   void acquire();
@@ -61,7 +63,7 @@ namespace spi {
   void begin();
   void end();
 
-  void rx();
+  uint8_t rx();
   void tx();
 } // namespace spi
 
@@ -69,9 +71,10 @@ namespace rf24 {
   enum rf24_mode_t { RX, TX };
 
   bool ready();
+  bool available();
 
   void mode(rf24_mode_t);
-  void rx();
+  uint8_t rx();
   void tx(uint8_t);
 } // namespace rf24
 

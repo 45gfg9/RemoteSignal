@@ -3,7 +3,16 @@
 int main() {
   init_io();
 
-  loop();
+  timer2::init();
+  wdt::interrupt(wdt::wdto_1024ms);
+
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  sei();
+
+  for (;;) {
+    loop();
+  }
 
   return 0;
 }
@@ -28,9 +37,5 @@ void init_io() {
 }
 
 void loop() {
-  sleep_enable();
-  sei();
-  for (;;) {
-    sleep_cpu();
-  }
+  sleep_cpu();
 }
