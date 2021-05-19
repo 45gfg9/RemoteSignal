@@ -52,6 +52,14 @@ namespace timer2 {
 
   void acquire();
   void release();
+
+  void enable_compare_a();
+  void enable_compare_a(uint8_t);
+  void disable_compare_a();
+
+  void enable_compare_b();
+  void enable_compare_b(uint8_t);
+  void disable_compare_b();
 } // namespace timer2
 
 namespace led {
@@ -75,7 +83,7 @@ namespace rf24 {
 
   void mode(rf24_mode_t);
   uint8_t rx();
-  void tx(uint8_t);
+  bool tx(uint8_t);
 } // namespace rf24
 
 #endif
