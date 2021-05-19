@@ -12,16 +12,21 @@
 
 enum wdto_t {
   wdto_16ms = 0,
-  wdto_32ms,
-  wdto_64ms,
-  wdto_128ms,
-  wdto_256ms,
-  wdto_512ms,
-  wdto_1024ms,
-  wdto_2048ms,
-  wdto_4096ms,
-  wdto_8192ms,
+  wdto_32ms = _BV(WDP0),
+  wdto_64ms = _BV(WDP1),
+  wdto_128ms = _BV(WDP1) | _BV(WDP0),
+  wdto_256ms = _BV(WDP2),
+  wdto_512ms = _BV(WDP2) | _BV(WDP0),
+  wdto_1024ms = _BV(WDP2) | _BV(WDP1),
+  wdto_2048ms = _BV(WDP2) | _BV(WDP1) | _BV(WDP0),
+  wdto_4096ms = _BV(WDP3),
+  wdto_8192ms = _BV(WDP3) | _BV(WDP0),
 };
+
+static volatile uint8_t &LED_DDRR = DDRD;
+static volatile uint8_t &LED_PORTR = PORTD;
+static volatile uint8_t &LED_PINR = PIND;
+static const uint8_t LED_PIN = PD0;
 
 void init_io();
 void init_spi();
