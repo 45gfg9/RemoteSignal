@@ -1,5 +1,5 @@
-#ifndef __REMOTESIGNAL_HXX__
-#define __REMOTESIGNAL_HXX__
+#ifndef __TELED_HXX__
+#define __TELED_HXX__
 
 #include <avr/io.h>
 #include <avr/sleep.h>

@@ -1,4 +1,4 @@
-#include <RemoteSignal.hxx>
+#include <Teled.hxx>
 
 static void rf24_tx_loop() {
   uint8_t payload = TCNT2 - OCR2A;

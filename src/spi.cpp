@@ -1,4 +1,4 @@
-#include <RemoteSignal.hxx>
+#include <Teled.hxx>
 
 void spi::init() {
   set_bit(SPSR, SPI2X);

@@ -1,5 +1,4 @@
-#include <RemoteSignal.hxx>
-#include <RF24.h>
+#include <Teled.hxx>
 
 void rf24::begin() {
   DDRC = _BV(PC0) | _BV(PC1);

@@ -1,4 +1,4 @@
-#include <RemoteSignal.hxx>
+#include <Teled.hxx>
 
 void wdt::interrupt(wdto_t timeout) {
   const uint8_t sreg = SREG;

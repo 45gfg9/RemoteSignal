@@ -1,4 +1,4 @@
-#include <RemoteSignal.hxx>
+#include <Teled.hxx>
 
 int main() {
   timer2::init();
