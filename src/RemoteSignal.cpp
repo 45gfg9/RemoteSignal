@@ -22,18 +22,13 @@ int main() {
 }
 
 void init_io() {
-  // LED
-  set_bit(DDRD, PD0);
+  // PD0: LED
+  // PD3: Button interrupt (PCINT19)
+  DDRD = _BV(PD0) | _BV(PD3);
 
-  // Button interrupt (PCINT19)
-  set_bit(DDRD, PD3);
   set_bit(PORTD, PD3); // Pull-up
   set_bit(PCMSK2, PCINT19);
   set_bit(PCICR, PCIE2);
-
-  // RF24
-  set_bit(DDRC, PC0); // CSN
-  set_bit(DDRC, PC1); // CE
 }
 
 void loop() {

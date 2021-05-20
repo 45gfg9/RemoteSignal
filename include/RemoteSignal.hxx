@@ -78,12 +78,12 @@ namespace spi {
 } // namespace spi
 
 namespace rf24 {
-  enum rf24_mode_t { RX, TX };
+  void begin();
+  void end();
 
   bool ready();
   bool available();
 
-  void mode(rf24_mode_t);
   uint8_t rx();
   bool tx(uint8_t);
 } // namespace rf24
