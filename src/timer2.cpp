@@ -1,11 +1,36 @@
 #include <RemoteSignal.hxx>
 
+static auto &ctx = GPIOR0;
+
 void timer2::init() {
   set_bit(ASSR, AS2);
 
-  // stub
+  TCNT2 = 0;
+  TCCR2A = 0;
+  TCCR2B = 0;
 
-  loop_until_bit_is_clear(ASSR, TCR2BUB);
+  ctx = 0;
+}
+
+void timer2::acquire() {
+  if (!ctx) {
+    TCCR2B = clk_div_128;
+    set_sleep_mode(SLEEP_MODE_PWR_SAVE);
+  }
+  ctx++;
+}
+
+void timer2::release() {
+  ctx--;
+  if (!ctx) {
+    TCCR2B = stopped;
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  }
+}
+
+void timer2::await() {
+  while (ASSR & 0b11111U)
+    ;
 }
 
 void timer2::enable_compare_a() {

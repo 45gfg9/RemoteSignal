@@ -52,6 +52,7 @@ namespace timer2 {
 
   void acquire();
   void release();
+  void await();
 
   void enable_compare_a();
   void enable_compare_a(uint8_t);
