@@ -69,11 +69,12 @@ namespace led {
 } // namespace led
 
 namespace spi {
+  void init();
   void begin();
   void end();
 
   uint8_t rx();
-  void tx();
+  void tx(uint8_t);
 } // namespace spi
 
 namespace rf24 {

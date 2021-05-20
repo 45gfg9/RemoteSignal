@@ -1,9 +1,11 @@
 #include <RemoteSignal.hxx>
 
 int main() {
+  timer2::init();
+
   init_io();
 
-  timer2::init();
+  spi::init();
   wdt::interrupt(wdt::wdto_1024ms);
 
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -28,10 +30,6 @@ void init_io() {
   set_bit(PORTD, PD3); // Pull-up
   set_bit(PCMSK2, PCINT19);
   set_bit(PCICR, PCIE2);
-
-  // SPI
-  set_bit(DDRB, PB3); // MOSI
-  set_bit(DDRB, PB5); // SCK
 
   // RF24
   set_bit(DDRC, PC0); // CSN
