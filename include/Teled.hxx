@@ -27,10 +27,8 @@ namespace wdt {
     wdto_8192ms = _BV(WDP3) | _BV(WDP0),
   };
 
-  void interrupt(wdto_t);
+  void init(wdto_t = wdto_1024ms);
   void disable();
-
-  void feed();
 } // namespace wdt
 
 namespace timer2 {

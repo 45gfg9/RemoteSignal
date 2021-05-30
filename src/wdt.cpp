@@ -1,10 +1,14 @@
 #include <Teled.hxx>
 
-void wdt::interrupt(wdto_t timeout) {
+inline static void wdr() {
+  asm volatile("wdr");
+}
+
+void wdt::init(wdto_t timeout) {
   const uint8_t sreg = SREG;
   cli();
 
-  feed();
+  wdr();
   WDTCSR = _BV(WDCE) | _BV(WDE);
   WDTCSR = _BV(WDIE) | timeout;
 
@@ -15,14 +19,9 @@ void wdt::disable() {
   const uint8_t sreg = SREG;
   cli();
 
-  feed();
+  wdr();
   clear_bit(MCUSR, WDRF);
   WDTCSR = _BV(WDCE) | _BV(WDE);
   WDTCSR = 0;
-
   SREG = sreg;
-}
-
-inline void wdt::feed() {
-  asm volatile("wdr");
 }
