@@ -1,14 +1,16 @@
 #include <Teled.hxx>
 
 static void rf24_tx_loop() {
-  uint8_t payload = TCNT2 - OCR2A;
-  OCR2A = TCNT2;
+  uint8_t payload = TCNT2 - 1 - OCR2B;
+  OCR2B = TCNT2;
 
-  while (!rf24::tx(payload) || bit_is_clear(TIFR2, OCF2A))
+  while (!rf24::tx(payload) || bit_is_clear(TIFR2, OCF2B))
     ;
 
-  timer2::disable_compare_a();
+  timer2::disable_compare_b();
   timer2::release();
+
+  set_bit(TIFR2, OCF2B);
 }
 
 ISR(PCINT2_vect) {
@@ -17,11 +19,12 @@ ISR(PCINT2_vect) {
   if (bit_is_clear(PIND, PD3)) {
     // pressed
     timer2::acquire();
-    timer2::enable_compare_a(TCNT2);
+    timer2::enable_compare_b(TCNT2);
   } else {
     // released
     rf24_tx_loop();
   }
+  timer2::await();
 }
 
 ISR(WDT_vect) {
@@ -35,11 +38,12 @@ ISR(WDT_vect) {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  rf24_tx_loop();
+  timer2::disable_compare_a();
+  timer2::release();
+  led::off();
 }
 
 ISR(TIMER2_COMPB_vect) {
-  timer2::disable_compare_b();
-  timer2::release();
-  led::off();
+  rf24_tx_loop();
+  timer2::await();
 }
