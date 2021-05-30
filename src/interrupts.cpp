@@ -1,6 +1,8 @@
 #include <Teled.hxx>
 
 static void rf24_tx_loop() {
+  timer2::sync();
+
   uint8_t payload = TCNT2 - 1 - OCR2B;
   OCR2B = TCNT2;
 
@@ -19,6 +21,7 @@ ISR(PCINT2_vect) {
   if (bit_is_clear(PIND, PD3)) {
     // pressed
     timer2::acquire();
+    timer2::sync();
     timer2::enable_compare_b(TCNT2);
   } else {
     // released
@@ -34,6 +37,7 @@ ISR(WDT_vect) {
     led::on();
     timer2::acquire();
     timer2::enable_compare_a(TCNT2 + payload);
+    timer2::await();
   }
 }
 
