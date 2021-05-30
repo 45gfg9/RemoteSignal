@@ -3,9 +3,13 @@
 static auto &ctx = GPIOR0;
 
 void timer2::init() {
+  power_timer2_enable();
+
   set_bit(ASSR, AS2);
 
   TCNT2 = 0;
+  OCR2A = 0;
+  OCR2B = 0;
   TCCR2A = 0;
   TCCR2B = 0;
 
@@ -13,16 +17,14 @@ void timer2::init() {
 }
 
 void timer2::acquire() {
-  if (!ctx) {
+  if (!ctx++) {
     TCCR2B = clk_div_128;
     set_sleep_mode(SLEEP_MODE_PWR_SAVE);
   }
-  ctx++;
 }
 
 void timer2::release() {
-  ctx--;
-  if (!ctx) {
+  if (!--ctx) {
     TCCR2B = stopped;
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   }
@@ -31,6 +33,12 @@ void timer2::release() {
 void timer2::await() {
   while (ASSR & 0b11111U)
     ;
+}
+
+void timer2::sync() {
+  // Sorry TCCR2A, but you are unused now
+  TCCR2A = 0;
+  await();
 }
 
 void timer2::enable_compare_a() {
