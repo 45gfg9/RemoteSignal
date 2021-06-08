@@ -14,6 +14,11 @@ void loop();
 
 namespace io {
   void init();
+
+  bool pressing();
+
+  void press();
+  void release();
 } // namespace io
 
 namespace wdt {
@@ -77,18 +82,21 @@ namespace spi {
   void end();
 
   uint8_t rx();
-  void tx(uint8_t);
+  uint8_t tx(uint8_t);
 } // namespace spi
 
 namespace rf24 {
   void begin();
   void end();
 
+  uint8_t read_reg(uint8_t);
+  void write_reg(uint8_t, uint8_t);
+
   bool ready();
   bool available();
 
   uint8_t rx();
-  bool tx(uint8_t);
+  uint8_t tx(uint8_t);
 } // namespace rf24
 
 #endif

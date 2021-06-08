@@ -13,6 +13,8 @@ static void rf24_tx_loop() {
   timer2::release();
 
   set_bit(TIFR2, OCF2B);
+
+  io::release();
 }
 
 ISR(PCINT2_vect) {
@@ -23,7 +25,9 @@ ISR(PCINT2_vect) {
     timer2::acquire();
     timer2::sync();
     timer2::enable_compare_b(TCNT2);
-  } else {
+    io::press();
+
+  } else if (io::pressing()) {
     // released
     rf24_tx_loop();
   }
