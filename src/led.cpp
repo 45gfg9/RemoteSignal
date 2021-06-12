@@ -1,9 +1,12 @@
 #include <Teled.hxx>
 
+static auto &LED_PORT = PORTD;
+static const auto LED_BIT = PORT0;
+
 void led::on() {
-  set_bit(PORTD, PORT0);
+  set_bit(LED_PORT, LED_BIT);
 }
 
 void led::off() {
-  clear_bit(PORTD, PORT0);
+  clear_bit(LED_PORT, LED_BIT);
 }
