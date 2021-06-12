@@ -1,5 +1,8 @@
 #include <Teled.hxx>
 
+static const auto CE = PC1;
+static const auto CSN = PC0;
+static const auto IRQ = PD2;
 
 enum ops {
   OP_R_REGISTER = 0x00, // mask
@@ -45,7 +48,10 @@ enum regs {
 };
 
 void rf24::begin() {
-  DDRC = _BV(PC0) | _BV(PC1);
+  set_bit(PORTC, CSN);
+
+  set_bit(DDRC, CSN);
+  set_bit(DDRC, CE);
 
   spi::begin();
 }
@@ -53,7 +59,9 @@ void rf24::begin() {
 void rf24::end() {
   spi::end();
 
-  DDRC = 0;
+  clear_bit(DDRC, CSN);
+  clear_bit(DDRC, CE);
+  clear_bit(PORTC, CSN);
 }
 
 bool rf24::ready() {
@@ -62,8 +70,7 @@ bool rf24::ready() {
 }
 
 bool rf24::available() {
-  // Stub
-  return bit_is_clear(PIND, PD2);
+  return bit_is_clear(PIND, IRQ);
 }
 
 uint8_t rf24::rx() {
