@@ -1,7 +1,7 @@
 #include <Teled.hxx>
 
 void spi::init() {
-  set_bit(SPSR, SPI2X);
+  set_bit(SPSR, SPI2X); // SPI freq = F_CPU/2
 }
 
 void spi::begin() {
@@ -13,14 +13,12 @@ void spi::begin() {
 
   set_bit(SPCR, MSTR); // SPI Master mode
   set_bit(SPCR, SPE);  // SPI Enable
-
-  // TODO setup SPI mode
 }
 
 void spi::end() {
   clear_bit(SPCR, SPE);
 
-  // disable SPI pins
+  // reset SPI pins
   clear_bit(PORTB, PB2); // SS
   clear_bit(DDRB, PB3);  // MOSI
   clear_bit(DDRB, PB5);  // SCK
@@ -31,14 +29,8 @@ void spi::end() {
   power_spi_disable();
 }
 
-uint8_t spi::rx() {
-  loop_until_bit_is_set(SPSR, SPIF);
-  return SPDR;
-}
-
-void spi::tx(uint8_t data) {
+uint8_t spi::transfer(uint8_t data) {
   SPDR = data;
-
   loop_until_bit_is_set(SPSR, SPIF);
-  // set_bit(SPSR, SPIF);
+  return SPDR; // SPIF is auto cleared after this
 }

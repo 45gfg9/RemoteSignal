@@ -81,8 +81,7 @@ namespace spi {
   void begin();
   void end();
 
-  uint8_t rx();
-  uint8_t tx(uint8_t);
+  uint8_t transfer(uint8_t);
 } // namespace spi
 
 namespace rf24 {
