@@ -47,42 +47,67 @@ enum regs {
   REG_FEATURE = 0x1D,
 };
 
-void rf24::begin() {
+static void begin_transaction() {
+  clear_bit(PORTC, CSN);
+}
+
+static void end_transaction() {
   set_bit(PORTC, CSN);
+}
 
-  set_bit(DDRC, CSN);
-  set_bit(DDRC, CE);
-
+void rf24::begin() {
   spi::begin();
 }
 
 void rf24::end() {
   spi::end();
-
-  clear_bit(DDRC, CSN);
-  clear_bit(DDRC, CE);
-  clear_bit(PORTC, CSN);
 }
 
-bool rf24::ready() {
-  // TODO
-  return false;
+uint8_t rf24::read_reg(uint8_t addr) {
+  begin_transaction();
+  spi::transfer(OP_R_REGISTER | addr);
+  auto result = spi::transfer(OP_NOP);
+  end_transaction();
+
+  return result;
+}
+
+uint8_t rf24::write_reg(uint8_t addr, uint8_t val) {
+  begin_transaction();
+  auto status = spi::transfer(OP_W_REGISTER | addr);
+  spi::transfer(val);
+  end_transaction();
+
+  return status;
+}
+
+uint8_t rf24::write_reg(uint8_t addr, const uint8_t *buf, uint8_t len) {
+  begin_transaction();
+  auto status = spi::transfer(OP_W_REGISTER | addr);
+  while (len--)
+    spi::transfer(*buf++);
+  end_transaction();
+
+  return status;
 }
 
 bool rf24::available() {
-  return bit_is_clear(PIND, IRQ);
+  for (uint8_t i = 6; i; i--) {
+    _delay_us(500);
+    if (bit_is_clear(PIND, IRQ)) {
+      // TODO clear interrupt flag
+      return true;
+    }
+  }
+  return false;
 }
 
 uint8_t rf24::rx() {
-  using spi::rx;
-
-  return rx();
+  // TODO
+  return 0;
 }
 
-bool rf24::tx(uint8_t data) {
-  using spi::tx;
-
-  tx(data);
-
-  return true;
+bool rf24::tx(uint8_t payload) {
+  // TODO
+  return false;
 }

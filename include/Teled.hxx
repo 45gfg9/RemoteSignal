@@ -90,13 +90,13 @@ namespace rf24 {
   void end();
 
   uint8_t read_reg(uint8_t);
-  void write_reg(uint8_t, uint8_t);
+  uint8_t write_reg(uint8_t, uint8_t); // returns status register
+  uint8_t write_reg(uint8_t, const uint8_t *, uint8_t);
 
-  bool ready();
   bool available();
 
   uint8_t rx();
-  uint8_t tx(uint8_t);
+  bool tx(uint8_t);
 } // namespace rf24
 
 #endif
