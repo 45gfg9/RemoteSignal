@@ -5,6 +5,7 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <avr/power.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #define set_bit(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
@@ -86,12 +87,10 @@ namespace spi {
 } // namespace spi
 
 namespace rf24 {
+  void init();
+
   void begin();
   void end();
-
-  uint8_t read_reg(uint8_t);
-  uint8_t write_reg(uint8_t, uint8_t); // returns status register
-  uint8_t write_reg(uint8_t, const uint8_t *, uint8_t);
 
   bool available();
 
