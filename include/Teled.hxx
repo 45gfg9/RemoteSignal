@@ -78,6 +78,7 @@ namespace led {
 
 namespace spi {
   void init();
+
   void begin();
   void end();
 

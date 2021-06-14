@@ -11,7 +11,7 @@ void spi::init() {
 void spi::begin() {
   power_spi_enable();
 
-  set_bit(PORTB, SS);
+  set_bit(PORTB, SS); // input pull-up
   set_bit(DDRB, MOSI);
   set_bit(DDRB, SCK);
 
