@@ -86,6 +86,51 @@ namespace {
   const uint8_t *const addr[] {addr_0, addr_1};
 } // namespace
 
+void rf24::init() {
+  set_bit(PORTC, CSN);
+  set_bit(DDRC, CSN);
+  set_bit(DDRC, CE);
+
+  spi::begin();
+
+  write(REG_CONFIG, 0b1001);
+
+  // set PA level -6dBm
+  // set data rate 1Mbps
+  write(REG_RF_SETUP, 0b00000010);
+
+  // set payload size 1B
+  write(REG_RX_PW_P0, 1);
+
+  // set address width 3B
+  write(REG_SETUP_AW, 0b01);
+
+  // set TX address
+  write(REG_TX_ADDR, addr[DEVICE_ID], 3);
+  write(REG_RX_ADDR_P0, addr[DEVICE_ID], 3);
+
+  // set RX address
+  write(REG_RX_ADDR_P1, addr[!DEVICE_ID], 3);
+  write(REG_EN_RXADDR, 0b00000010);
+
+  // set retries
+  write(REG_SETUP_RETR, 0b01111111);
+
+  spi::end();
+}
+
+void rf24::begin() {
+  spi::begin();
+
+  write(REG_CONFIG, 0b1011); // power on
+}
+
+void rf24::end() {
+  write(REG_CONFIG, 0b1001); // power off
+
+  spi::end();
+}
+
 bool rf24::available() {
   for (uint8_t i = 6; i; i--) {
     _delay_us(500);
@@ -104,5 +149,6 @@ uint8_t rf24::rx() {
 
 bool rf24::tx(uint8_t payload) {
   write(OP_W_TX_PAYLOAD, payload);
+  // TODO report
   return false;
 }
