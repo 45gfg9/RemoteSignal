@@ -1,5 +1,6 @@
 #include <Teled.hxx>
 
+// bad #define practice, don't follow
 #define ADDR_A 0x18, 0x18, 0x08
 #define ADDR_B 0xCB, 0x01, 0x00
 
@@ -102,6 +103,8 @@ namespace {
 
     return status;
   }
+
+  uint8_t reset_irq() { return write(REG_STATUS, 0x70); }
 } // namespace
 
 void rf24::init() {
@@ -156,12 +159,14 @@ void rf24::end() {
 bool rf24::available() {
   for (uint8_t i = 6; i; i--) {
     _delay_us(500);
-    if (bit_is_clear(PIND, IRQ)) {
-      // TODO clear interrupt flag
-      return true;
-    }
+    if (bit_is_clear(PIND, IRQ))
+      break;
   }
-  return false;
+
+  auto status = read(REG_STATUS);
+  reset_irq(); // clear IRQ pin
+
+  return status & _BV(6); // RX Data Ready interrupt
 }
 
 uint8_t rf24::rx() {
@@ -170,7 +175,14 @@ uint8_t rf24::rx() {
 }
 
 bool rf24::tx(uint8_t payload) {
-  write(OP_W_TX_PAYLOAD, payload);
-  // TODO report
-  return false;
+  begin_transaction();
+  spi::transfer(OP_W_TX_PAYLOAD);
+  spi::transfer(payload);
+  end_transaction();
+
+  loop_until_bit_is_clear(PORTD, IRQ);
+  auto status = read(REG_STATUS);
+  reset_irq(); // clear IRQ pin
+
+  return status & _BV(5); // TX Data Sent interrupt
 }
