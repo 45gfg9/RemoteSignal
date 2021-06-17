@@ -1,5 +1,18 @@
 #include <Teled.hxx>
 
+#define ADDR_A 0x18, 0x18, 0x08
+#define ADDR_B 0xCB, 0x01, 0x00
+
+#define DEVICE_ID 0
+
+#if DEVICE_ID == 0
+#define TX_ADDR ADDR_A
+#define RX_ADDR ADDR_B
+#else
+#define TX_ADDR ADDR_B
+#define RX_ADDR ADDR_A
+#endif
+
 namespace {
   const auto CE = PC1;
   const auto CSN = PC0;
@@ -62,6 +75,14 @@ namespace {
     return result;
   }
 
+  uint8_t write(uint8_t cmd) {
+    begin_transaction();
+    auto status = spi::transfer(cmd);
+    end_transaction();
+
+    return status;
+  }
+
   uint8_t write(uint8_t addr, uint8_t val) {
     begin_transaction();
     auto status = spi::transfer(OP_W_REGISTER | addr);
@@ -71,19 +92,16 @@ namespace {
     return status;
   }
 
-  uint8_t write(uint8_t addr, const uint8_t *buf, uint8_t len) {
+  uint8_t write(uint8_t addr, uint8_t b0, uint8_t b1, uint8_t b2) {
     begin_transaction();
     auto status = spi::transfer(OP_W_REGISTER | addr);
-    while (len--)
-      spi::transfer(pgm_read_byte(buf++));
+    spi::transfer(b0);
+    spi::transfer(b1);
+    spi::transfer(b2);
     end_transaction();
 
     return status;
   }
-
-  const uint8_t addr_0[] PROGMEM {0x18, 0x18, 0x08};
-  const uint8_t addr_1[] PROGMEM {0xCB, 0x01, 0x00};
-  const uint8_t *const addr[] {addr_0, addr_1};
 } // namespace
 
 void rf24::init() {
@@ -93,28 +111,32 @@ void rf24::init() {
 
   spi::begin();
 
+  // enable all interrupts
+  // CRC 1B
   write(REG_CONFIG, 0b1001);
-
-  // set PA level -6dBm
-  // set data rate 1Mbps
-  write(REG_RF_SETUP, 0b00000010);
-
-  // set payload size 1B
-  write(REG_RX_PW_P0, 1);
 
   // set address width 3B
   write(REG_SETUP_AW, 0b01);
 
+  // set retries
+  write(REG_SETUP_RETR, 0b100);
+
+  // set channel
+  write(REG_RF_CH, 76);
+
+  // set PA level -6dBm
+  // set data rate 1Mbps
+  write(REG_RF_SETUP, 0b010);
+
   // set TX address
-  write(REG_TX_ADDR, addr[DEVICE_ID], 3);
-  write(REG_RX_ADDR_P0, addr[DEVICE_ID], 3);
+  write(REG_RX_ADDR_P0, TX_ADDR);
+  write(REG_TX_ADDR, TX_ADDR);
 
   // set RX address
-  write(REG_RX_ADDR_P1, addr[!DEVICE_ID], 3);
-  write(REG_EN_RXADDR, 0b00000010);
+  write(REG_RX_ADDR_P1, RX_ADDR);
 
-  // set retries
-  write(REG_SETUP_RETR, 0b01111111);
+  // set payload size 1B
+  write(REG_RX_PW_P0, 1);
 
   spi::end();
 }
