@@ -157,11 +157,15 @@ void rf24::end() {
 }
 
 bool rf24::available() {
+  set_bit(PORTC, CE);
+
   for (uint8_t i = 30; i; i--) {
     _delay_us(100);
     if (bit_is_clear(PIND, IRQ))
       break;
   }
+
+  clear_bit(PORTC, CE);
 
   auto status = read(REG_STATUS);
   reset_irq(); // clear IRQ pin
