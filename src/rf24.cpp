@@ -157,8 +157,8 @@ void rf24::end() {
 }
 
 bool rf24::available() {
-  for (uint8_t i = 6; i; i--) {
-    _delay_us(500);
+  for (uint8_t i = 30; i; i--) {
+    _delay_us(100);
     if (bit_is_clear(PIND, IRQ))
       break;
   }
