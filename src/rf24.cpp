@@ -125,7 +125,7 @@ void rf24::init() {
   write(REG_SETUP_RETR, 0b100);
 
   // set channel
-  write(REG_RF_CH, 76);
+  write(REG_RF_CH, 59);
 
   // set PA level -6dBm
   // set data rate 1Mbps
