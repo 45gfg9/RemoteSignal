@@ -122,7 +122,7 @@ void rf24::init() {
   write(REG_SETUP_AW, 0b01);
 
   // set retries
-  write(REG_SETUP_RETR, 0b100);
+  write(REG_SETUP_RETR, 0b1111);
 
   // set channel
   write(REG_RF_CH, 59);
