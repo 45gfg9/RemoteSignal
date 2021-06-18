@@ -84,9 +84,9 @@ namespace {
     return status;
   }
 
-  uint8_t write(uint8_t addr, uint8_t val) {
+  uint8_t write(uint8_t addr, uint8_t val, uint8_t mask = OP_W_REGISTER) {
     begin_transaction();
-    auto status = spi::transfer(OP_W_REGISTER | addr);
+    auto status = spi::transfer(mask | addr);
     spi::transfer(val);
     end_transaction();
 
@@ -177,10 +177,7 @@ uint8_t rf24::rx() {
 bool rf24::tx(uint8_t payload) {
   write(REG_CONFIG, 0b1010); // PRIM_RX = 0
 
-  begin_transaction();
-  spi::transfer(OP_W_TX_PAYLOAD);
-  spi::transfer(payload);
-  end_transaction();
+  write(OP_W_TX_PAYLOAD, payload, 0);
 
   set_bit(PORTC, CE);
   loop_until_bit_is_clear(PIND, IRQ);
