@@ -174,8 +174,9 @@ bool rf24::available() {
 }
 
 uint8_t rf24::rx() {
-  // TODO
-  return 0;
+  reset_irq();
+
+  return read(OP_R_RX_PAYLOAD);
 }
 
 bool rf24::tx(uint8_t payload) {
