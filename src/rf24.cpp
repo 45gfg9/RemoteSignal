@@ -175,14 +175,21 @@ uint8_t rf24::rx() {
 }
 
 bool rf24::tx(uint8_t payload) {
+  write(REG_CONFIG, 0b1010); // PRIM_RX = 0
+
   begin_transaction();
   spi::transfer(OP_W_TX_PAYLOAD);
   spi::transfer(payload);
   end_transaction();
 
-  loop_until_bit_is_clear(PORTD, IRQ);
+  set_bit(PORTC, CE);
+  loop_until_bit_is_clear(PIND, IRQ);
+  clear_bit(PORTC, CE);
+
   auto status = read(REG_STATUS);
   reset_irq(); // clear IRQ pin
+
+  write(REG_CONFIG, 0b1011); // PRIM_RX = 1
 
   return status & _BV(5); // TX Data Sent interrupt
 }
