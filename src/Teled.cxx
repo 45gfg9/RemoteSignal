@@ -1,5 +1,7 @@
 #include <Teled.hxx>
 
+static void loop();
+
 int main() {
   timer2::init();
 

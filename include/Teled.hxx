@@ -11,8 +11,6 @@
 #define set_bit(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define clear_bit(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 
-void loop();
-
 namespace io {
   void init();
 
