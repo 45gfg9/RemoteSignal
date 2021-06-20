@@ -173,9 +173,8 @@ bool rf24::available() {
   return status & _BV(6); // RX Data Ready interrupt
 }
 
+// Only call when rf24::available() returns true!
 uint8_t rf24::rx() {
-  reset_irq();
-
   return read(OP_R_RX_PAYLOAD);
 }
 
