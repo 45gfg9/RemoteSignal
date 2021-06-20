@@ -35,10 +35,11 @@ void timer2::await() {
     ;
 }
 
-void timer2::sync() {
+void timer2::sync(bool wait) {
   // Sorry TCCR2A, but you are unused now
   TCCR2A = 0;
-  await();
+  if (wait)
+    await();
 }
 
 void timer2::enable_compare_a() {

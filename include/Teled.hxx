@@ -14,9 +14,9 @@
 namespace io {
   void init();
 
-  bool pressing();
+  bool valid();
 
-  void press();
+  void hold();
   void release();
 } // namespace io
 
@@ -59,7 +59,7 @@ namespace timer2 {
   void release();
 
   void await();
-  void sync();
+  void sync(bool = true);
 
   void enable_compare_a();
   void enable_compare_a(uint8_t);
