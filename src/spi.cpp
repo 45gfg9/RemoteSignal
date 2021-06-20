@@ -27,9 +27,6 @@ void spi::end() {
   clear_bit(DDRB, MOSI);
   clear_bit(DDRB, SCK);
 
-  // clear SPI interrupt flag
-  set_bit(SPSR, SPIF);
-
   power_spi_disable();
 }
 
