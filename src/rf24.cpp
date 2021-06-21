@@ -118,10 +118,13 @@ void rf24::init() {
   // CRC 1B
   write(REG_CONFIG, 0b1001);
 
+  // set pipe 0 & 1 auto ack
+  write(REG_EN_AA, 0b11);
+
   // set address width 3B
   write(REG_SETUP_AW, 0b01);
 
-  // set retries
+  // set 15 retries
   write(REG_SETUP_RETR, 0b1111);
 
   // set channel
@@ -129,7 +132,7 @@ void rf24::init() {
 
   // set PA level -6dBm
   // set data rate 1Mbps
-  write(REG_RF_SETUP, 0b010);
+  write(REG_RF_SETUP, 0b000100);
 
   // set TX address
   write(REG_RX_ADDR_P0, TX_ADDR);
@@ -140,6 +143,7 @@ void rf24::init() {
 
   // set payload size 1B
   write(REG_RX_PW_P0, 1);
+  write(REG_RX_PW_P1, 1);
 
   spi::end();
 }
@@ -158,6 +162,7 @@ void rf24::end() {
 
 bool rf24::available() {
   set_bit(PORTC, CE);
+  _delay_us(130); // RX Setting 130µs
 
   for (uint8_t i = 30; i; i--) {
     _delay_us(100);
