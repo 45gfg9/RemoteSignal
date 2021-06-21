@@ -25,9 +25,9 @@ ISR(PCINT2_vect) {
     timer2::acquire();
     timer2::sync();
     timer2::enable_compare_b(TCNT2);
-    io::press();
+    io::hold();
 
-  } else if (io::pressing()) {
+  } else if (io::valid()) {
     // released
     rf24_tx_loop();
   }
