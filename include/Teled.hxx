@@ -90,9 +90,7 @@ namespace rf24 {
   void begin();
   void end();
 
-  bool available();
-
-  uint8_t rx();
+  bool rx(uint8_t * = nullptr);
   bool tx(uint8_t);
 } // namespace rf24
 

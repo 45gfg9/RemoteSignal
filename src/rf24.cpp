@@ -160,7 +160,7 @@ void rf24::end() {
   spi::end();
 }
 
-bool rf24::available() {
+bool rf24::rx(uint8_t *payload) {
   set_bit(PORTC, CE);
   _delay_us(130); // RX Setting 130µs
 
@@ -175,12 +175,13 @@ bool rf24::available() {
   auto status = read(REG_STATUS);
   reset_irq(); // clear IRQ pin
 
-  return status & _BV(6); // RX Data Ready interrupt
-}
+  bool rx_dr = status & _BV(6); // RX Data Ready interrupt
+  if (rx_dr && payload)
+    *payload = read(OP_R_RX_PAYLOAD);
+  else
+    write(OP_FLUSH_RX);
 
-// Only call when rf24::available() returns true!
-uint8_t rf24::rx() {
-  return read(OP_R_RX_PAYLOAD);
+  return rx_dr;
 }
 
 bool rf24::tx(uint8_t payload) {
