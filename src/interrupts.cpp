@@ -45,6 +45,7 @@ ISR(WDT_vect) {
     led::on();
     timer2::acquire();
     timer2::sync();
+    // FIXME: Possible overlap causing extra acquisition
     timer2::enable_compare_a(TCNT2 + payload);
   }
   rf24::end();
