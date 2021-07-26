@@ -172,8 +172,7 @@ bool rf24::rx(uint8_t *payload) {
 
   clear_bit(PORTC, CE);
 
-  auto status = read(REG_STATUS);
-  reset_irq(); // clear IRQ pin
+  auto status = reset_irq(); // clear IRQ pin
 
   bool rx_dr = status & _BV(6); // RX Data Ready interrupt
   if (rx_dr && payload)
@@ -193,8 +192,7 @@ bool rf24::tx(uint8_t payload) {
   loop_until_bit_is_clear(PIND, IRQ);
   clear_bit(PORTC, CE);
 
-  auto status = read(REG_STATUS);
-  reset_irq(); // clear IRQ pin
+  auto status = reset_irq(); // clear IRQ pin
 
   write(REG_CONFIG, 0b1011); // PRIM_RX = 1
 
