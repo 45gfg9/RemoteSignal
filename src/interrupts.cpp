@@ -20,16 +20,15 @@ static void rf24_tx_loop() {
 ISR(PCINT2_vect) {
   _delay_ms(10); // brutally debounce
 
-  if (bit_is_clear(PIND, PD3)) {
+  if (io::valid()) {
+    // released
+    rf24_tx_loop();
+  } else if (bit_is_clear(PIND, PD3)) {
     // pressed
     timer2::acquire();
     timer2::sync();
     timer2::enable_compare_b(TCNT2);
     io::hold();
-
-  } else if (io::valid()) {
-    // released
-    rf24_tx_loop();
   }
   timer2::await();
 }
