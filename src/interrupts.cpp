@@ -8,7 +8,7 @@ static void rf24_tx_loop() {
   uint8_t payload = TCNT2 - 1 - OCR2B;
   OCR2B = TCNT2;
 
-  while (!rf24::tx(payload) || bit_is_clear(TIFR2, OCF2B))
+  while (!rf24::tx(payload) && bit_is_clear(TIFR2, OCF2B))
     ;
 
   timer2::disable_compare_b();
