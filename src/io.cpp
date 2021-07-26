@@ -12,7 +12,7 @@ static auto &FLAG_PORT = GPIOR1;
 static const auto FLAG_BIT = 0;
 
 bool io::valid() {
-  return bit_is_clear(PIND, PD3);
+  return bit_is_set(FLAG_PORT, FLAG_BIT);
 }
 
 void io::hold() {
