@@ -1,7 +1,9 @@
 #include <Teled.hxx>
 
 static void rf24_tx_loop() {
-  timer2::sync();
+  timer2::sync(false);
+  rf24::begin();
+  timer2::await();
 
   uint8_t payload = TCNT2 - 1 - OCR2B;
   OCR2B = TCNT2;
@@ -13,6 +15,8 @@ static void rf24_tx_loop() {
   timer2::release();
 
   set_bit(TIFR2, OCF2B);
+
+  rf24::end();
 
   io::release();
 }
