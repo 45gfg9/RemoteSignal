@@ -38,14 +38,17 @@ ISR(PCINT2_vect) {
 }
 
 ISR(WDT_vect) {
-  if (rf24::available()) {
-    uint8_t payload = rf24::rx();
+  rf24::begin();
 
+  uint8_t payload;
+  if (rf24::rx(&payload)) {
     led::on();
     timer2::acquire();
+    timer2::sync();
     timer2::enable_compare_a(TCNT2 + payload);
-    timer2::await();
   }
+  rf24::end();
+  timer2::await();
 }
 
 ISR(TIMER2_COMPA_vect) {
