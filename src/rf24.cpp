@@ -166,7 +166,7 @@ bool rf24::rx(uint8_t *payload) {
   set_bit(PORTC, CE);
   _delay_us(130); // RX Setting 130µs
 
-  for (uint8_t i = 30; i; i--) {
+  for (uint8_t i = 10; i; i--) {
     _delay_us(100);
     if (bit_is_clear(PIND, IRQ))
       break;
