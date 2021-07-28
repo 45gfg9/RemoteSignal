@@ -8,18 +8,16 @@ void io::init() {
   set_bit(PCICR, PCIE2);
 }
 
-static auto &FLAG_PORT = GPIOR1;
-static const auto FLAG_BIT = 0;
-
 bool io::valid() {
-  return bit_is_set(FLAG_PORT, FLAG_BIT);
+  return bit_is_set(SREG, SREG_T);
 }
 
 void io::hold() {
-  // can optimize
-  set_bit(FLAG_PORT, FLAG_BIT);
+  // Set T flag
+  asm volatile("set");
 }
 
 void io::release() {
-  clear_bit(FLAG_PORT, FLAG_BIT);
+  // Clear T flag
+  asm volatile("clt");
 }
