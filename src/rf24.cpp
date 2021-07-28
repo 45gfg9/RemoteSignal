@@ -196,6 +196,7 @@ bool rf24::tx(uint8_t payload) {
 
   auto status = reset_irq(); // clear IRQ pin
 
+  write(OP_FLUSH_TX);
   write(REG_CONFIG, 0b1011); // PRIM_RX = 1
 
   return status & _BV(5); // TX Data Sent interrupt
