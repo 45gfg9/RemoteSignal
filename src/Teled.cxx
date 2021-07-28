@@ -14,7 +14,7 @@ int main() {
 
   rf24::init();
 
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  set_sleep_mode(SLEEP_MODE_PWR_SAVE);
   sleep_enable();
   sei();
 

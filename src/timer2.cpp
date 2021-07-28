@@ -19,14 +19,12 @@ void timer2::init() {
 void timer2::acquire() {
   if (!ctx++) {
     TCCR2B = clk_div_128;
-    set_sleep_mode(SLEEP_MODE_PWR_SAVE);
   }
 }
 
 void timer2::release() {
   if (!--ctx) {
     TCCR2B = stopped;
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   }
 }
 
