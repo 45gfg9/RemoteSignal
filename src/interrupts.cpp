@@ -1,23 +1,22 @@
 #include <Teled.hxx>
 
 static void rf24_tx_loop() {
-  timer2::sync(false);
+  timer2::disable_compare_b();
+  timer2::release();
+
   rf24::begin();
   timer2::await();
 
   uint8_t payload = TCNT2 - 1 - OCR2B;
-  timer2::enable_compare_b(TCNT2);
+  timer1::begin();
 
-  while (!rf24::tx(payload) && bit_is_clear(TIFR2, OCF2B))
+  while (!rf24::tx(payload) && !timer1::timeout())
     ;
 
-  timer2::disable_compare_b();
-  timer2::release();
-
+  timer1::end();
   rf24::end();
 
   io::release();
-  timer2::await();
 }
 
 ISR(PCINT2_vect) {

@@ -2,6 +2,26 @@
 
 static auto &ctx = GPIOR0;
 
+void timer1::init() {
+  OCR1A = 0x480;
+}
+
+void timer1::begin() {
+  power_timer1_enable();
+  set_bit(TIFR1, OCF1A);
+  TCNT1 = 0;
+  TCCR1B = clk_div_1024;
+}
+
+void timer1::end() {
+  TCCR1B = stopped;
+  power_timer1_disable();
+}
+
+bool timer1::timeout() {
+  return bit_is_set(TIFR1, OCF1A);
+}
+
 void timer2::init() {
   power_timer2_enable();
 
@@ -44,7 +64,6 @@ void timer2::sync(bool wait) {
     await();
 }
 
-// https://www.avrfreaks.net/forum/timer-2-async-compare-match-isr-executed-when-it-shouldnt
 void timer2::advance() {
   if (TCCR2B & 0b111) {
     // Only if Timer is not stopped

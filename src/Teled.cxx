@@ -3,6 +3,7 @@
 int main() {
   power_all_disable();
 
+  timer1::init();
   timer2::init();
 
   io::init();
