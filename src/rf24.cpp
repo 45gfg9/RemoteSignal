@@ -114,6 +114,8 @@ void rf24::init() {
 
   spi::begin();
 
+  _delay_ms(100);
+
   // enable all interrupts
   // CRC 1B
   write(REG_CONFIG, 0b1001);
