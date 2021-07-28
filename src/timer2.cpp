@@ -40,6 +40,16 @@ void timer2::sync(bool wait) {
     await();
 }
 
+// https://www.avrfreaks.net/forum/timer-2-async-compare-match-isr-executed-when-it-shouldnt
+void timer2::advance() {
+  if (TCCR2B & 0b111) {
+    // Only if Timer is not stopped
+    uint8_t t = TCNT2;
+    while (TCNT2 == t)
+      ;
+  }
+}
+
 void timer2::enable_compare_a() {
   set_bit(TIMSK2, OCIE2A);
 }
@@ -47,6 +57,9 @@ void timer2::enable_compare_a() {
 void timer2::enable_compare_a(uint8_t target) {
   enable_compare_a();
   OCR2A = target;
+
+  advance();
+  set_bit(TIFR2, OCF2A);
 }
 
 void timer2::disable_compare_a() {
@@ -60,6 +73,9 @@ void timer2::enable_compare_b() {
 void timer2::enable_compare_b(uint8_t target) {
   enable_compare_b();
   OCR2B = target;
+
+  advance();
+  set_bit(TIFR2, OCF2B);
 }
 
 void timer2::disable_compare_b() {

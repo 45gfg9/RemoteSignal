@@ -58,8 +58,9 @@ namespace timer2 {
   void acquire();
   void release();
 
-  void await();
-  void sync(bool = true);
+  void await();           // wait for registers to update
+  void sync(bool = true); // sync clk_IO with clk_Async
+  void advance();         // wait for Timer to advance by 1
 
   void enable_compare_a();
   void enable_compare_a(uint8_t);

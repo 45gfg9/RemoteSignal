@@ -6,7 +6,7 @@ static void rf24_tx_loop() {
   timer2::await();
 
   uint8_t payload = TCNT2 - 1 - OCR2B;
-  OCR2B = TCNT2;
+  timer2::enable_compare_b(TCNT2);
 
   while (!rf24::tx(payload) && bit_is_clear(TIFR2, OCF2B))
     ;
@@ -14,11 +14,10 @@ static void rf24_tx_loop() {
   timer2::disable_compare_b();
   timer2::release();
 
-  set_bit(TIFR2, OCF2B);
-
   rf24::end();
 
   io::release();
+  timer2::await();
 }
 
 ISR(PCINT2_vect) {
@@ -34,7 +33,8 @@ ISR(PCINT2_vect) {
     timer2::enable_compare_b(TCNT2);
     io::hold();
   }
-  timer2::await();
+
+  set_bit(PCIFR, PCIF2);
 }
 
 ISR(WDT_vect) {
@@ -56,9 +56,9 @@ ISR(TIMER2_COMPA_vect) {
   timer2::disable_compare_a();
   timer2::release();
   led::off();
+  timer2::await();
 }
 
 ISR(TIMER2_COMPB_vect) {
   rf24_tx_loop();
-  timer2::await();
 }
