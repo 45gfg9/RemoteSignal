@@ -16,15 +16,19 @@ void timer2::init() {
   ctx = 0;
 }
 
+void timer2::set_speed(t2_speed_t speed) {
+  TCCR2B = speed;
+}
+
 void timer2::acquire() {
   if (!ctx++) {
-    TCCR2B = clk_div_128;
+    set_speed(clk_div_128);
   }
 }
 
 void timer2::release() {
   if (!--ctx) {
-    TCCR2B = stopped;
+    set_speed(stopped);
   }
 }
 

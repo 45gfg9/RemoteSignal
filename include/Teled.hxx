@@ -52,8 +52,7 @@ namespace timer2 {
 
   void init();
 
-  void begin(t2_speed_t = clk_div_128);
-  void stop();
+  void set_speed(t2_speed_t);
 
   void acquire();
   void release();
