@@ -1,9 +1,10 @@
 #include <Teled.hxx>
 
 int main() {
+  timer1::init();
+
   power_all_disable();
 
-  timer1::init();
   timer2::init();
 
   io::init();
