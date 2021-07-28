@@ -1,11 +1,9 @@
 #include <Teled.hxx>
 
-static void loop();
-
 int main() {
-  timer2::init();
-
   power_all_disable();
+
+  timer2::init();
 
   io::init();
 
@@ -21,12 +19,8 @@ int main() {
   timer2::await();
 
   for (;;) {
-    loop();
+    sleep_cpu();
   }
 
   return 0;
-}
-
-void loop() {
-  sleep_cpu();
 }
