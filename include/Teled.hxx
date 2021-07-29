@@ -46,8 +46,8 @@ namespace timer1 {
     clk_div_64 = _BV(CS11) | _BV(CS10),
     clk_div_256 = _BV(CS12),
     clk_div_1024 = _BV(CS12) | _BV(CS10),
-    clk_ext_falling = _BV(CS12) | _BV(CS11),
-    clk_ext_rising = _BV(CS12) | _BV(CS11) | _BV(CS10),
+    ext_falling = _BV(CS12) | _BV(CS11),
+    ext_rising = _BV(CS12) | _BV(CS11) | _BV(CS10),
   };
 
   void init();
