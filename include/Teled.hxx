@@ -84,10 +84,12 @@ namespace timer2 {
   void enable_compare_a();
   void enable_compare_a(uint8_t);
   void disable_compare_a();
+  bool compare_a_enabled();
 
   void enable_compare_b();
   void enable_compare_b(uint8_t);
   void disable_compare_b();
+  bool compare_b_enabled();
 } // namespace timer2
 
 namespace led {

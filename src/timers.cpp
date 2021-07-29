@@ -89,6 +89,10 @@ void timer2::disable_compare_a() {
   clear_bit(TIMSK2, OCIE2A);
 }
 
+bool timer2::compare_a_enabled() {
+  return bit_is_set(TIMSK2, OCIE2A);
+}
+
 void timer2::enable_compare_b() {
   set_bit(TIMSK2, OCIE2B);
 }
@@ -103,4 +107,8 @@ void timer2::enable_compare_b(uint8_t target) {
 
 void timer2::disable_compare_b() {
   clear_bit(TIMSK2, OCIE2B);
+}
+
+bool timer2::compare_b_enabled() {
+  return bit_is_set(TIMSK2, OCIE2B);
 }
