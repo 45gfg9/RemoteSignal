@@ -3,14 +3,14 @@
 static auto &ctx = GPIOR0;
 
 void timer1::init() {
-  OCR1A = 0x800;
+  OCR1A = 0xF4E; // ~ 1003ms
 }
 
 void timer1::begin() {
   power_timer1_enable();
   TCNT1 = 0;
   set_bit(TIFR1, OCF1A);
-  TCCR1B = clk_div_1024;
+  TCCR1B = clk_div_256;
 }
 
 void timer1::end() {

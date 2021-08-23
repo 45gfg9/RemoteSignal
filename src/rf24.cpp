@@ -130,11 +130,11 @@ void rf24::init() {
   write(REG_SETUP_RETR, 0b1111);
 
   // set channel
-  write(REG_RF_CH, 59);
+  write(REG_RF_CH, 111);
 
   // set PA level -6dBm
-  // set data rate 1Mbps
-  write(REG_RF_SETUP, 0b000100);
+  // set data rate 2Mbps
+  write(REG_RF_SETUP, 0b001100);
 
   // set TX address
   write(REG_RX_ADDR_P0, TX_ADDR);
@@ -166,8 +166,8 @@ bool rf24::rx(uint8_t *payload) {
   set_bit(PORTC, CE);
   _delay_us(130); // RX Setting 130µs
 
-  for (uint8_t i = 10; i; i--) {
-    _delay_us(100);
+  for (uint8_t i = 200; i; i--) {
+    _delay_us(10);
     if (bit_is_clear(PIND, IRQ))
       break;
   }
@@ -191,7 +191,9 @@ bool rf24::tx(uint8_t payload) {
   write(OP_W_TX_PAYLOAD, payload, 0);
 
   set_bit(PORTC, CE);
-  loop_until_bit_is_clear(PIND, IRQ);
+  uint8_t timeout = 0;
+  while (bit_is_set(PORTD, IRQ) && --timeout)
+    _delay_us(10);
   clear_bit(PORTC, CE);
 
   auto status = reset_irq(); // clear IRQ pin
