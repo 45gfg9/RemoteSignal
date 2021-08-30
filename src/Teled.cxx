@@ -9,6 +9,8 @@ int main() {
 
   io::init();
 
+  led::on();
+
   spi::init();
   wdt::init();
 
@@ -17,6 +19,8 @@ int main() {
   set_sleep_mode(SLEEP_MODE_PWR_SAVE);
   sleep_enable();
   sei();
+
+  led::off();
 
   timer2::await();
 

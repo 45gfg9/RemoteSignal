@@ -42,7 +42,7 @@ void timer2::set_speed(t2_speed_t speed) {
 
 void timer2::acquire() {
   if (!ctx++) {
-    set_speed(clk_div_128);
+    set_speed(clk_div_256);
   }
 }
 
