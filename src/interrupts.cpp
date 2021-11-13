@@ -40,6 +40,9 @@ ISR(WDT_vect) {
   if (timer2::compare_a_enabled())
     return;
 
+  // fail-safe, not tested
+  wdt::set(wdt::reset);
+
   rf24::begin();
 
   uint8_t payload;
@@ -51,6 +54,8 @@ ISR(WDT_vect) {
   }
   rf24::end();
   timer2::await();
+
+  wdt::set(wdt::interrupt);
 }
 
 ISR(TIMER2_COMPA_vect) {

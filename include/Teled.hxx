@@ -34,8 +34,14 @@ namespace wdt {
     wdto_8192ms = _BV(WDP3) | _BV(WDP0),
   };
 
-  void init(wdto_t = wdto_1024ms);
-  void disable();
+  enum wdt_mode_t {
+    stopped = 0,
+    interrupt = _BV(WDIE),
+    reset = _BV(WDE),
+    int_and_rst = _BV(WDIE) | _BV(WDE),
+  };
+
+  void set(wdt_mode_t, wdto_t = wdto_1024ms);
 } // namespace wdt
 
 namespace timer1 {

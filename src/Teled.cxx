@@ -12,7 +12,7 @@ int main() {
   led::on();
 
   spi::init();
-  wdt::init();
+  wdt::set(wdt::interrupt);
 
   rf24::init();
 

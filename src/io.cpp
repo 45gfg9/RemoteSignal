@@ -1,6 +1,8 @@
 #include <Teled.hxx>
 
 void io::init() {
+  MCUSR = 0; // clear all
+
   set_bit(DDRD, PD0); // LED
 
   set_bit(PORTD, PD3); // PCINT19 pull-up
