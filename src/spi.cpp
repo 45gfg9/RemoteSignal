@@ -6,6 +6,7 @@ static const auto SCK = PB5;
 
 void spi::init() {
   set_bit(SPSR, SPI2X); // SPI freq = F_CPU/2
+  set_bit(SPCR, MSTR);  // SPI Master mode
 }
 
 void spi::begin() {
@@ -15,8 +16,7 @@ void spi::begin() {
   set_bit(DDRB, MOSI);
   set_bit(DDRB, SCK);
 
-  set_bit(SPCR, MSTR); // SPI Master mode
-  set_bit(SPCR, SPE);  // SPI Enable
+  set_bit(SPCR, SPE); // SPI Enable
 }
 
 void spi::end() {
