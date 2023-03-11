@@ -1,6 +1,9 @@
-#include <Teled.hxx>
+#include <teled.h>
 
-void io::init() {
+#define FLAG_PORT GPIOR1
+#define FLAG_BIT 0
+
+void io_init(void) {
   MCUSR = 0; // clear all
 
   set_bit(DDRD, PD0); // LED
@@ -10,18 +13,15 @@ void io::init() {
   set_bit(PCICR, PCIE2);
 }
 
-static auto &FLAG_PORT = GPIOR1;
-static const auto FLAG_BIT = 0;
-
-bool io::valid() {
+bool io_valid(void) {
   return bit_is_set(FLAG_PORT, FLAG_BIT);
 }
 
-void io::hold() {
+void io_hold(void) {
   // can optimize
   set_bit(FLAG_PORT, FLAG_BIT);
 }
 
-void io::release() {
+void io_release(void) {
   clear_bit(FLAG_PORT, FLAG_BIT);
 }

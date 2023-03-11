@@ -1,6 +1,6 @@
-#include <Teled.hxx>
+#include <teled.h>
 
-void wdt::set(wdt_mode_t mode, wdto_t timeout) {
+void wdt_set(enum wdt_mode_t mode, enum wdto_t timeout) {
   const uint8_t sreg = SREG;
   cli();
 

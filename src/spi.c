@@ -1,15 +1,15 @@
-#include <Teled.hxx>
+#include <teled.h>
 
-static const auto SS = PB2;
-static const auto MOSI = PB3;
-static const auto SCK = PB5;
+#define SS PB2
+#define MOSI PB3
+#define SCK PB5
 
-void spi::init() {
+void spi_init(void) {
   set_bit(SPSR, SPI2X); // SPI freq = F_CPU/2
   set_bit(SPCR, MSTR);  // SPI Master mode
 }
 
-void spi::begin() {
+void spi_begin(void) {
   power_spi_enable();
 
   set_bit(PORTB, SS); // input pull-up
@@ -19,7 +19,7 @@ void spi::begin() {
   set_bit(SPCR, SPE); // SPI Enable
 }
 
-void spi::end() {
+void spi_end(void) {
   clear_bit(SPCR, SPE);
 
   // reset SPI pins
@@ -30,7 +30,7 @@ void spi::end() {
   power_spi_disable();
 }
 
-uint8_t spi::transfer(uint8_t data) {
+uint8_t spi_transfer(uint8_t data) {
   SPDR = data;
   loop_until_bit_is_set(SPSR, SPIF);
   return SPDR; // SPIF is auto cleared after this
